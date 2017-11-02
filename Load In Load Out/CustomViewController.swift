@@ -19,6 +19,8 @@ class CustomViewController : UIViewController {
         
         statusBar.tintColor = UIColor.clear
         
+        self.automaticallyAdjustsScrollViewInsets = false
+        
     }
     
 }

@@ -19,6 +19,7 @@ class CrateCell : UITableViewCell {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
         imageView.layer.borderWidth = 1
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -38,7 +39,7 @@ class CrateCell : UITableViewCell {
         super.layoutSubviews()
         
         codeImage.frame = CGRect(x: 15, y: self.frame.height / 2 - ((self.frame.height - 20) / 2), width: self.frame.height - 20, height: self.frame.height - 20)
-        crateTitleLabel.frame = CGRect(x: codeImage.frame.maxX + 15, y: 0, width: self.frame.width, height: self.frame.height)
+        crateTitleLabel.frame = CGRect(x: codeImage.frame.maxX + 15, y: 0, width: self.frame.width - 15 - 15 - codeImage.frame.width, height: self.frame.height)
         
     }
     

@@ -218,8 +218,6 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         let statusBarHeight = statusBar.frame.height
         let navHeight = self.navigationController?.navigationBar.frame.height
         
-        self.automaticallyAdjustsScrollViewInsets = false
-        
         if let window = UIApplication.shared.keyWindow {
         
             // Place create crate button

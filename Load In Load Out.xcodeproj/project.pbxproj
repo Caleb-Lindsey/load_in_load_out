@@ -23,6 +23,7 @@
 		2E811AF91F964F7100A959B2 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E811AF81F964F7100A959B2 /* CustomTabBar.swift */; };
 		2E811AFB1F965B6100A959B2 /* DataHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E811AFA1F965B6100A959B2 /* DataHandle.swift */; };
 		2E9C72C41FABB0EE00B1E7A1 /* CrateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9C72C31FABB0EE00B1E7A1 /* CrateCell.swift */; };
+		2E9C72C61FABBDC300B1E7A1 /* TruckCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9C72C51FABBDC300B1E7A1 /* TruckCell.swift */; };
 		2E9EE9EA1FA8413B00A9142C /* CustomeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EE9E91FA8413B00A9142C /* CustomeTextField.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		2E811AF81F964F7100A959B2 /* CustomTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		2E811AFA1F965B6100A959B2 /* DataHandle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataHandle.swift; sourceTree = "<group>"; };
 		2E9C72C31FABB0EE00B1E7A1 /* CrateCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateCell.swift; sourceTree = "<group>"; };
+		2E9C72C51FABBDC300B1E7A1 /* TruckCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TruckCell.swift; sourceTree = "<group>"; };
 		2E9EE9E91FA8413B00A9142C /* CustomeTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomeTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,6 +142,7 @@
 				2E21FCEF1F9997D100FBEF43 /* Truck.swift */,
 				2E21FCF11F99981B00FBEF43 /* Crate.swift */,
 				2E21FCF31F99983900FBEF43 /* Item.swift */,
+				2E9C72C51FABBDC300B1E7A1 /* TruckCell.swift */,
 				2E9C72C31FABB0EE00B1E7A1 /* CrateCell.swift */,
 			);
 			path = "Load In Load Out";
@@ -308,6 +311,7 @@
 				2E21FCF41F99983900FBEF43 /* Item.swift in Sources */,
 				2E811AC71F964E5000A959B2 /* AppDelegate.swift in Sources */,
 				2E811ACF1F964E5000A959B2 /* Load_In_Load_Out.xcdatamodeld in Sources */,
+				2E9C72C61FABBDC300B1E7A1 /* TruckCell.swift in Sources */,
 				2E21FCEE1F99971B00FBEF43 /* IncidentReportController.swift in Sources */,
 				2E9C72C41FABB0EE00B1E7A1 /* CrateCell.swift in Sources */,
 				2E9EE9EA1FA8413B00A9142C /* CustomeTextField.swift in Sources */,
