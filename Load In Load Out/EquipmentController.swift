@@ -83,7 +83,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         let textView = UITextView()
         textView.textColor = UIColor.white
         textView.backgroundColor = UIColor.clear
-        textView.font = UIFont(name: "Helvetica", size: 11)
+        textView.font = UIFont(name: "Helvetica", size: 15)
         textView.isEditable = false
         textView.layer.borderColor = UIColor.white.cgColor
         textView.layer.borderWidth = 0.3

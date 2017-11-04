@@ -46,8 +46,8 @@ class DataHandle {
         let crate4 : Crate = Crate(title: "Floor Crate 1", items: [item5, item8, item9, item2], type: "Lighting", code: UIImage(named: "QRCode")!, location: 4)
         let crate5 : Crate = Crate(title: "Floor Crate 2", items: [item3, item8, item6, item10], type: "Visual", code: UIImage(named: "QRCode")!, location: 1)
         
-        let truck1 : Truck = Truck(title: "Church At The Dunk", captain: "Caleb Lindsey", crates: [crate1, crate2, crate3], date: Date(), notes: "This is a big truck.", loaded: false)
-        let truck2 : Truck = Truck(title: "Christmas At The Dunk", captain: "Ellie Granata", crates: [crate1, crate5, crate4], date: Date(), notes: "This is my favorite truck.", loaded: false)
+        let truck1 : Truck = Truck(title: "Church At The Dunk", captain: "Caleb Lindsey", crates: [crate1, crate2, crate3], date: Date(), notes: "This is a big truck.", loaded: true)
+        let truck2 : Truck = Truck(title: "Christmas At The Dunk", captain: "Ellie Granata", crates: [crate1, crate2, crate3, crate4, crate5], date: Date(), notes: "This is my favorite truck.", loaded: false)
         let truck3 : Truck = Truck(title: "CATD: New Years!", captain: "Danielle Florent", crates: [crate4, crate5, crate2], date: Date(), notes: "This is a small truck.", loaded: false)
         
         GlobalVariables.arrayOfItems = [item1, item2, item3, item4, item5, item6, item7, item8, item9, item10]
