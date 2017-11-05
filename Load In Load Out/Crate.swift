@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Crate {
+class Crate : NSObject, NSCoding {
     
     // Variables
     var title : String = String()
@@ -17,7 +17,7 @@ class Crate {
     var code : UIImage = UIImage()
     var location : Int = Int()
     
-    init() {
+    override init() {
         self.title = ""
         self.items = []
         self.type = ""
@@ -33,4 +33,56 @@ class Crate {
         self.location = location
     }
     
+    required init(coder aDecoder: NSCoder) {
+        
+        self.title = aDecoder.decodeObject(forKey: "crateTitle") as! String
+        self.items = aDecoder.decodeObject(forKey: "items") as! [Item]
+        self.type = aDecoder.decodeObject(forKey: "type") as! String
+        self.code = aDecoder.decodeObject(forKey: "code") as! UIImage
+        self.location = aDecoder.decodeObject(forKey: "location") as! Int
+
+        
+    }
+    
+    func initWithCoder(aDecoder: NSCoder) -> Crate {
+        
+        self.title = aDecoder.decodeObject(forKey: "crateTitle") as! String
+        self.items = aDecoder.decodeObject(forKey: "items") as! [Item]
+        self.type = aDecoder.decodeObject(forKey: "type") as! String
+        self.code = aDecoder.decodeObject(forKey: "code") as! UIImage
+        self.location = aDecoder.decodeObject(forKey: "location") as! Int
+        
+        return self
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(title, forKey: "crateTitle")
+        aCoder.encode(items, forKey: "items")
+        aCoder.encode(type, forKey: "type")
+        aCoder.encode(code, forKey: "code")
+        aCoder.encode(location, forKey: "location")
+        
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

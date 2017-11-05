@@ -15,12 +15,13 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     var video = AVCaptureVideoPreviewLayer()
     let arrayOfMinutes = Array(0...90)
     var newItemArray : [Item] = [Item]()
+    var dataHandle = DataHandle()
     
     let createCrateButton : UIButton = {
         let button = UIButton()
         button.setTitle("New Crate", for: .normal)
         button.backgroundColor = GlobalVariables.grayColor
-        button.showsTouchWhenHighlighted = true
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.white.cgColor
         button.addTarget(self, action: #selector(presentCamera), for: .touchUpInside)
@@ -60,7 +61,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         let button = UIButton()
         button.setImage(UIImage(named: "QRCode"), for: .normal)
         button.layer.cornerRadius = 8
-        button.adjustsImageWhenHighlighted = true
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(expandCode), for: .touchUpInside)
         return button
@@ -94,7 +95,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         let button = UIButton()
         button.setTitle("Edit Crate", for: .normal)
         button.backgroundColor = GlobalVariables.grayColor
-        button.showsTouchWhenHighlighted = true
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.white.cgColor
         return button
@@ -167,7 +168,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     let newCrateCreateButton : UIButton = {
         let button = UIButton()
         button.setTitle("Create", for: .normal)
-        button.showsTouchWhenHighlighted = true
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.titleLabel?.textAlignment = .center
         button.layer.borderWidth = 0.5
         button.layer.borderColor = GlobalVariables.yellowColor.cgColor
@@ -178,7 +179,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     let newCrateCancelButton : UIButton = {
         let button = UIButton()
         button.setTitle("Cancel", for: .normal)
-        button.showsTouchWhenHighlighted = true
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.titleLabel?.textAlignment = .center
         button.layer.borderWidth = 0.5
         button.layer.borderColor = GlobalVariables.yellowColor.cgColor
@@ -617,6 +618,8 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
             let newCrate : Crate = Crate(title: newCrateLabel.text!, items: newItemArray, type: GlobalVariables.arrayOfTypes[newCrateTypeBar.selectedSegmentIndex], code: newCrateCodeView.image!, location: 0)
             
             GlobalVariables.arrayOfCrates.append(newCrate)
+            
+            dataHandle.saveCrate()
             
             crateTableView.reloadData()
             

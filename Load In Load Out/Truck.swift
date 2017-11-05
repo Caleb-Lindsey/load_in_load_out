@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Truck {
+class Truck : NSObject, NSCoding {
     
     // Variables
     var title : String = String()
@@ -27,4 +27,55 @@ class Truck {
         self.loaded = loaded
     }
     
+    required init(coder aDecoder: NSCoder) {
+        
+        self.title = aDecoder.decodeObject(forKey: "title") as! String
+        self.captain = aDecoder.decodeObject(forKey: "captain") as! String
+        self.crates = aDecoder.decodeObject(forKey: "crates") as! [Crate]
+        self.date = aDecoder.decodeObject(forKey: "date") as! Date
+        self.notes = aDecoder.decodeObject(forKey: "notes") as! String
+        self.loaded = aDecoder.decodeObject(forKey: "loaded") as! Bool
+        
+        
+    }
+    
+    func initWithCoder(aDecoder: NSCoder) -> Truck {
+        
+        self.title = aDecoder.decodeObject(forKey: "title") as! String
+        self.captain = aDecoder.decodeObject(forKey: "captain") as! String
+        self.crates = aDecoder.decodeObject(forKey: "crates") as! [Crate]
+        self.date = aDecoder.decodeObject(forKey: "date") as! Date
+        self.notes = aDecoder.decodeObject(forKey: "notes") as! String
+        self.loaded = aDecoder.decodeObject(forKey: "loaded") as! Bool
+        
+        return self
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(title, forKey: "title")
+        aCoder.encode(captain, forKey: "captain")
+        aCoder.encode(crates, forKey: "crates")
+        aCoder.encode(date, forKey: "date")
+        aCoder.encode(notes, forKey: "notes")
+        aCoder.encode(loaded, forKey: "loaded")
+        
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

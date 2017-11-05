@@ -27,6 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Fill mock data for UIDevelopment
         let dataHandle = DataHandle()
+        dataHandle.fillItemData()
+        dataHandle.fillCrateData()
+        dataHandle.fillTruckData()
         dataHandle.mockDataFill()
         
         return true

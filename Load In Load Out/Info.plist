@@ -25,7 +25,7 @@
 	<key>UIMainStoryboardFile</key>
 	<string></string>
 	<key>NSCameraUsageDescription</key>
-	<string>Let&apos;s get scannin&apos;</string>
+	<string>Used for scanning QRCodes.</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

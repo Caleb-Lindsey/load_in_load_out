@@ -11,15 +11,17 @@ import UIKit
 class TruckController : CustomViewController, UITableViewDelegate, UITableViewDataSource {
     
     // Variables
+    var newTruckCrateArray : [Crate] = [Crate]()
+    var dataHandle = DataHandle()
     
-    let loadTruckButton : UIButton = {
+    let createTruckButton : UIButton = {
         let button = UIButton()
-        button.setTitle("Load Truck", for: .normal)
+        button.setTitle("New Truck", for: .normal)
         button.backgroundColor = GlobalVariables.grayColor
-        button.showsTouchWhenHighlighted = true
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.white.cgColor
-        button.addTarget(self, action: #selector(loadTruck), for: .touchUpInside)
+        button.addTarget(self, action: #selector(newTruck), for: .touchUpInside)
         return button
     }()
     
@@ -65,11 +67,20 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         return textView
     }()
     
+    let loadTruckButton : UIButton = {
+        let button = UIButton()
+        button.backgroundColor = GlobalVariables.grayColor
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = UIColor.white.cgColor
+        return button
+    }()
+    
     let editTruckButton : UIButton = {
         let button = UIButton()
         button.setTitle("Edit Truck", for: .normal)
         button.backgroundColor = GlobalVariables.grayColor
-        button.showsTouchWhenHighlighted = true
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.white.cgColor
         return button
@@ -79,7 +90,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         let button = UIButton()
         button.setTitle("Duplicate Truck", for: .normal)
         button.backgroundColor = GlobalVariables.grayColor
-        button.showsTouchWhenHighlighted = true
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.white.cgColor
         return button
@@ -101,6 +112,89 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         return label
     }()
     
+    //************************************************************************************************************************************************************************************************
+    
+    let newTruckView : UIView = {
+        let view = UIView()
+        view.backgroundColor = GlobalVariables.grayColor
+        view.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        view.layer.borderWidth = 2
+        return view
+    }()
+    
+    let newTruckTitleField : CustomTextField = {
+        let textField = CustomTextField()
+        textField.textColor = UIColor.white
+        textField.attributedPlaceholder = NSAttributedString(string: "Enter Truck Title", attributes: [NSForegroundColorAttributeName: UIColor.lightGray])
+        textField.backgroundColor = UIColor.clear
+        textField.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        textField.layer.borderWidth = 0.4
+        return textField
+    }()
+    
+    let newTruckDatePicker : UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.setValue(GlobalVariables.yellowColor, forKeyPath: "textColor")
+        picker.minimumDate = Date()
+        return picker
+    }()
+    
+    let newTruckCaptainField : CustomTextField = {
+        let textField = CustomTextField()
+        textField.textColor = UIColor.white
+        textField.attributedPlaceholder = NSAttributedString(string: "Enter Captain Name", attributes: [NSForegroundColorAttributeName: UIColor.lightGray])
+        textField.backgroundColor = UIColor.clear
+        textField.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        textField.layer.borderWidth = 0.4
+        return textField
+    }()
+    
+    let newTruckAllCratesTable : UITableView = {
+        let tableView = UITableView()
+        tableView.allowsMultipleSelection = true
+        return tableView
+    }()
+    
+    let newTruckCrateTable : UITableView = {
+        let tableView = UITableView()
+        tableView.allowsSelection = false
+        return tableView
+    }()
+    
+    let newTruckNotesView : UITextView = {
+        let textView = UITextView()
+        textView.textColor = UIColor.white
+        textView.backgroundColor = UIColor.clear
+        textView.font = UIFont(name: "Helvetica", size: 15)
+        textView.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        textView.layer.borderWidth = 0.3
+        textView.text = "Truck Notes: "
+        return textView
+    }()
+    
+    let cancelNewTruckButton : UIButton = {
+        let button = UIButton()
+        button.setTitle("Cancel", for: .normal)
+        button.backgroundColor = GlobalVariables.grayColor
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        button.addTarget(self, action: #selector(dismissNewTruckView), for: .touchUpInside)
+        return button
+    }()
+    
+    let doneNewTruckButton : UIButton = {
+        let button = UIButton()
+        button.setTitle("Complete Truck", for: .normal)
+        button.backgroundColor = GlobalVariables.grayColor
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        button.addTarget(self, action: #selector(completeTruck), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -113,18 +207,18 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         if let window = UIApplication.shared.keyWindow {
             
             // Place load truck button
-            loadTruckButton.frame = CGRect(x: 0, y: statusBarHeight + navHeight!, width: window.frame.width * (4/10), height: 50)
-            view.addSubview(loadTruckButton)
+            createTruckButton.frame = CGRect(x: 0, y: statusBarHeight + navHeight!, width: window.frame.width * (4/10), height: 50)
+            view.addSubview(createTruckButton)
             
             // Place truck table view
-            truckTableView.frame = CGRect(x: 0, y: loadTruckButton.frame.maxY, width: loadTruckButton.frame.width, height: window.frame.height - statusBarHeight - navHeight! - loadTruckButton.frame.height)
+            truckTableView.frame = CGRect(x: 0, y: createTruckButton.frame.maxY, width: createTruckButton.frame.width, height: window.frame.height - statusBarHeight - navHeight! - createTruckButton.frame.height)
             truckTableView.delegate = self
             truckTableView.dataSource = self
             truckTableView.register(TruckCell.self, forCellReuseIdentifier: "truckCell")
             view.addSubview(truckTableView)
             
             // Place title label
-            truckTitleLable.frame = CGRect(x: truckTableView.frame.maxX + 25, y: statusBarHeight + navHeight! + 25, width: window.frame.width - truckTableView.frame.width - 25 - 25, height: 30)
+            truckTitleLable.frame = CGRect(x: truckTableView.frame.maxX + 25, y: statusBarHeight + navHeight! + 25, width: window.frame.width - truckTableView.frame.width - 25 - 25, height: 40)
             view.addSubview(truckTitleLable)
             
             // Place date label
@@ -146,11 +240,15 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
             view.addSubview(itemTableView)
             
             // Place truck notes view
-            truckNotesView.frame = CGRect(x: crateTableView.frame.origin.x, y: crateTableView.frame.maxY + 15, width: view.frame.width - truckTableView.frame.width - 25 - 25, height: 200)
+            truckNotesView.frame = CGRect(x: crateTableView.frame.origin.x, y: crateTableView.frame.maxY + 15, width: view.frame.width - truckTableView.frame.width - 25 - 25, height: 150)
             view.addSubview(truckNotesView)
             
+            // Place load truck button
+            loadTruckButton.frame = CGRect(x: truckNotesView.frame.origin.x, y: truckNotesView.frame.maxY + 15, width: truckNotesView.frame.width, height: 50)
+            view.addSubview(loadTruckButton)
+            
             // Place edit truck button
-            editTruckButton.frame = CGRect(x: truckNotesView.frame.origin.x, y: truckNotesView.frame.maxY + 15, width: truckNotesView.frame.width / 2 - 7.5, height: 50)
+            editTruckButton.frame = CGRect(x: loadTruckButton.frame.origin.x, y: loadTruckButton.frame.maxY + 15, width: loadTruckButton.frame.width / 2 - 7.5, height: 50)
             view.addSubview(editTruckButton)
             
             // Place duplicate truck button
@@ -158,7 +256,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
             view.addSubview(duplicateTruckButton)
             
             // Place captian label
-            captainLabel.frame = CGRect(x: editTruckButton.frame.origin.x, y: editTruckButton.frame.maxY + 5, width: truckNotesView.frame.width, height: 20)
+            captainLabel.frame = CGRect(x: editTruckButton.frame.origin.x, y: editTruckButton.frame.maxY + 5, width: truckNotesView.frame.width, height: 25)
             view.addSubview(captainLabel)
             
             // Place load status
@@ -183,10 +281,20 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
             cell.textLabel?.text = GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].crates[indexPath.row].title
             cell.textLabel?.textAlignment = .left
             return cell
-        } else {
+        } else if tableView == itemTableView {
             let cell = itemTableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
             cell.textLabel?.text = GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].crates[(crateTableView.indexPathForSelectedRow?.row)!].items[indexPath.row].title
             cell.textLabel?.textAlignment = .center
+            return cell
+        } else if tableView == newTruckAllCratesTable {
+            let cell : CrateCell = newTruckAllCratesTable.dequeueReusableCell(withIdentifier: "allCratesCell", for: indexPath) as! CrateCell
+            cell.crateTitleLabel.text = GlobalVariables.arrayOfCrates[indexPath.row].title
+            cell.codeImage.image = GlobalVariables.arrayOfCrates[indexPath.row].code
+            return cell
+        } else {
+            let cell : CrateCell = newTruckCrateTable.dequeueReusableCell(withIdentifier: "newCrateCell", for: indexPath) as! CrateCell
+            cell.crateTitleLabel.text = newTruckCrateArray[indexPath.row].title
+            cell.codeImage.image = newTruckCrateArray[indexPath.row].code
             return cell
         }
         
@@ -198,8 +306,12 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
             return GlobalVariables.arrayOfTrucks.count
         } else if tableView == crateTableView {
             return GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].crates.count
-        } else {
+        } else if tableView == itemTableView {
             return GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].crates[(crateTableView.indexPathForSelectedRow?.row)!].items.count
+        } else if tableView == newTruckAllCratesTable {
+            return GlobalVariables.arrayOfCrates.count
+        } else {
+            return newTruckCrateArray.count
         }
     }
     
@@ -220,21 +332,32 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
             truckNotesView.text = GlobalVariables.arrayOfTrucks[indexPath.row].notes
             captainLabel.text = "Captain: \(GlobalVariables.arrayOfTrucks[indexPath.row].captain)"
             
+            let date = GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].date
+            let month = Calendar.current.component(.month, from: date)
+            let day = Calendar.current.component(.day, from: date)
+            let year = Calendar.current.component(.year, from: date)
+            dateLabel.text = "\(month) • \(day) • \(year)"
+            
             if GlobalVariables.arrayOfTrucks[indexPath.row].loaded {
                 loadStatus.text = "Loaded"
                 loadStatus.textColor = UIColor.green
                 loadTruckButton.setTitle("Unload Truck", for: .normal)
+
             } else {
                 loadStatus.text = "Not Loaded"
                 loadStatus.textColor = UIColor.red
                 loadTruckButton.setTitle("Load Truck", for: .normal)
+
             }
             
         } else if tableView == crateTableView {
             
             itemTableView.reloadData()
             
-        } else {
+        } else { // tableView == newTruckAllCratesTable
+            
+            newTruckCrateArray.append(GlobalVariables.arrayOfCrates[indexPath.row])
+            newTruckCrateTable.reloadData()
             
         }
     }
@@ -244,8 +367,12 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
             return "Trucks"
         } else if tableView == crateTableView {
             return "Crates"
-        } else {
+        } else if tableView == itemTableView {
             return "Items in this Crate"
+        } else if tableView == newTruckAllCratesTable {
+            return "All Crates"
+        } else {
+            return "Crates In This Truck"
         }
     }
     
@@ -257,6 +384,12 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
             truckNotesView.text = GlobalVariables.arrayOfTrucks[0].notes
             captainLabel.text = "Captain: \(GlobalVariables.arrayOfTrucks[0].captain)"
             
+            let date = GlobalVariables.arrayOfTrucks[0].date
+            let month = Calendar.current.component(.month, from: date)
+            let day = Calendar.current.component(.day, from: date)
+            let year = Calendar.current.component(.year, from: date)
+            dateLabel.text = "\(month) • \(day) • \(year)"
+            
             if GlobalVariables.arrayOfTrucks[0].loaded {
                 loadStatus.text = "Loaded"
                 loadStatus.textColor = UIColor.green
@@ -265,6 +398,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
                 loadStatus.text = "Not Loaded"
                 loadStatus.textColor = UIColor.red
                 loadTruckButton.setTitle("Load Truck", for: .normal)
+
             }
             
         }
@@ -301,8 +435,129 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         
     }
     
-    func loadTruck() {
+    func newTruck() {
         
+        let statusBarHeight = statusBar.frame.height
+        let navHeight = self.navigationController?.navigationBar.frame.height
+        let tabBarHeight = self.tabBarController?.tabBar.frame.height
+
+        
+        // New Truck View
+        newTruckView.frame = CGRect(x: 0, y: view.frame.height, width: view.frame.width, height: view.frame.height - statusBarHeight - navHeight! - tabBarHeight!)
+        view.addSubview(newTruckView)
+        
+        // New Truck Title
+        newTruckTitleField.frame = CGRect(x: 15, y: 15, width: newTruckView.frame.width / 2 - 7.5 - 15, height: 30)
+        newTruckView.addSubview(newTruckTitleField)
+        
+        // New Truck Captain
+        newTruckCaptainField.frame = CGRect(x: newTruckTitleField.frame.origin.x, y: newTruckTitleField.frame.maxY + 15, width: newTruckTitleField.frame.width, height: newTruckTitleField.frame.height)
+        newTruckView.addSubview(newTruckCaptainField)
+        
+        // New Truck Date
+        newTruckDatePicker.frame = CGRect(x: newTruckTitleField.frame.maxX + 15, y: newTruckTitleField.frame.origin.y, width: newTruckTitleField.frame.width, height: newTruckTitleField.frame.height + newTruckCaptainField.frame.height + 15)
+        newTruckView.addSubview(newTruckDatePicker)
+        
+        // New Truck Notes
+        newTruckNotesView.frame = CGRect(x: newTruckTitleField.frame.maxX + 15, y: newTruckDatePicker.frame.maxY + 15, width: newTruckTitleField.frame.width, height: 200)
+        newTruckView.addSubview(newTruckNotesView)
+        
+        // All Crates Table
+        newTruckAllCratesTable.frame = CGRect(x: newTruckCaptainField.frame.origin.x, y: newTruckCaptainField.frame.maxY + 15, width: newTruckTitleField.frame.width, height: newTruckView.frame.height - 15 - 50 - 15 - 15 - 30 - 15 - 30 - 15)
+        newTruckAllCratesTable.delegate = self
+        newTruckAllCratesTable.dataSource = self
+        newTruckAllCratesTable.register(CrateCell.self, forCellReuseIdentifier: "allCratesCell")
+        newTruckView.addSubview(newTruckAllCratesTable)
+        
+        // New Truck Crate Table
+        newTruckCrateTable.frame = CGRect(x: newTruckAllCratesTable.frame.maxX + 15, y: newTruckNotesView.frame.maxY + 15, width: newTruckAllCratesTable.frame.width, height: 450)
+        newTruckCrateTable.delegate = self
+        newTruckCrateTable.dataSource = self
+        newTruckCrateTable.register(CrateCell.self, forCellReuseIdentifier: "newCrateCell")
+        newTruckView.addSubview(newTruckCrateTable)
+        
+        // New Truck Complete Button
+        doneNewTruckButton.frame = CGRect(x: newTruckCrateTable.frame.origin.x, y: newTruckCrateTable.frame.maxY + 5, width: newTruckView.frame.width - 15 - newTruckTitleField.frame.width - 15 - 15 , height: newTruckView.frame.height - 15 - newTruckDatePicker.frame.height - 15 - 200 - 15 - 450 - 5 - 15 - 50 - 15)
+        newTruckView.addSubview(doneNewTruckButton)
+        
+        // Cancel Button
+        cancelNewTruckButton.frame = CGRect(x: 15, y: newTruckView.frame.height - 15 - 50, width: 100, height: 50)
+        newTruckView.addSubview(cancelNewTruckButton)
+        
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+            
+            self.newTruckView.frame.origin.y = statusBarHeight + navHeight!
+            
+        }, completion: { (finished : Bool) in
+            
+            
+            
+        })
+        
+    }
+    
+    func dismissNewTruckView() {
+        
+        UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseOut, animations: {
+            
+            self.newTruckView.frame.origin.y = self.view.frame.height
+            
+        }, completion: { (finished : Bool) in
+            
+            self.newTruckCrateArray.removeAll()
+            self.newTruckCrateTable.reloadData()
+            self.newTruckTitleField.text = ""
+            self.newTruckCaptainField.text = ""
+            self.newTruckNotesView.text = "Truck Notes: "
+            self.newTruckDatePicker.setDate(Date(), animated: false)
+            self.newTruckAllCratesTable.reloadData()
+            self.newTruckView.removeFromSuperview()
+            
+        })
+        
+    }
+    
+    func completeTruck() {
+        
+        var alertMessage : String = ""
+        var noErrors : Bool = true
+        
+        if newTruckTitleField.text == "" {
+            noErrors = false
+            newTruckTitleField.layer.borderColor = UIColor.red.cgColor
+            alertMessage.append("- Missing Truck Title\n")
+        } else {
+            newTruckTitleField.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        }
+        if newTruckCaptainField.text == "" {
+            noErrors = false
+            newTruckCaptainField.layer.borderColor = UIColor.red.cgColor
+            alertMessage.append("- Missing Captain Name\n")
+        } else {
+            newTruckCaptainField.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        }
+        if newTruckCrateArray.count == 0 {
+            noErrors = false
+            newTruckCrateTable.layer.borderColor = UIColor.red.cgColor
+            newTruckCrateTable.layer.borderWidth = 2
+            alertMessage.append("- No Crates In Truck")
+        } else {
+            newTruckCrateTable.layer.borderWidth = 0
+        }
+        
+        if noErrors {
+            
+            let newTruck : Truck = Truck(title: newTruckTitleField.text!, captain: newTruckCaptainField.text!, crates: newTruckCrateArray, date: newTruckDatePicker.date, notes: newTruckNotesView.text!, loaded: false)
+            GlobalVariables.arrayOfTrucks.append(newTruck)
+            dataHandle.saveTruck()
+            truckTableView.reloadData()
+            dismissNewTruckView()
+            
+        } else {
+            let alert = UIAlertController(title: "Missing Data", message: alertMessage, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+        }
         
         
     }

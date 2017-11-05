@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Item {
+class Item : NSObject, NSCoding {
     
     // Variable
     var title : String = String()
@@ -19,6 +19,36 @@ class Item {
         self.title = title
         self.setupLength = setupLength
         self.setupInstructions = setupInstructions
+    }
+    
+    override init() {
+        self.title = ""
+        self.setupLength = 0
+        self.setupInstructions = ""
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        
+        self.title = aDecoder.decodeObject(forKey: "itemTitle") as! String
+        self.setupLength = aDecoder.decodeObject(forKey: "setupLength") as! Int
+        self.setupInstructions = aDecoder.decodeObject(forKey: "setupInstructions") as! String
+        
+    }
+    
+    func initWithCoder(aDecoder: NSCoder) -> Item {
+        
+        self.title = aDecoder.decodeObject(forKey: "itemTitle") as! String
+        self.setupLength = aDecoder.decodeObject(forKey: "setupLength") as! Int
+        self.setupInstructions = aDecoder.decodeObject(forKey: "setupInstructions") as! String
+        
+        return self
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(title, forKey: "itemTitle")
+        aCoder.encode(setupLength, forKey: "setupLength")
+        aCoder.encode(setupInstructions, forKey: "setupInstructions")
+        
     }
     
 }

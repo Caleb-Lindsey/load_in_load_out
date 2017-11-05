@@ -58,4 +58,93 @@ class DataHandle {
 
     }
     
+    func fillItemData() {
+        
+        print("Filling Items")
+        if let data = UserDefaults.standard.object(forKey: "ItemList") as? NSData {
+            GlobalVariables.arrayOfItems = NSKeyedUnarchiver.unarchiveObject(with: data as Data) as! [Item]
+        }
+        
+    }
+    
+    func fillCrateData() {
+        
+        print("Filling Crates")
+        if let data = UserDefaults.standard.object(forKey: "CrateList") as? NSData {
+            GlobalVariables.arrayOfCrates = NSKeyedUnarchiver.unarchiveObject(with: data as Data) as! [Crate]
+        }
+        
+    }
+    
+    func fillTruckData() {
+        
+        print("Filling Trucks")
+        if let data = UserDefaults.standard.object(forKey: "TruckList") as? NSData {
+            GlobalVariables.arrayOfTrucks = NSKeyedUnarchiver.unarchiveObject(with: data as Data) as! [Truck]
+        }
+        
+    }
+    
+    func saveItem() {
+        
+        let data = NSKeyedArchiver.archivedData(withRootObject: GlobalVariables.arrayOfItems)
+        UserDefaults.standard.set(data, forKey: "ItemList")
+        print("Items Saved")
+        
+    }
+    
+    func saveCrate() {
+        
+        let data = NSKeyedArchiver.archivedData(withRootObject: GlobalVariables.arrayOfCrates)
+        UserDefaults.standard.set(data, forKey: "CrateList")
+        print("Crates Saved")
+        
+    }
+    
+    func saveTruck() {
+        
+        let data = NSKeyedArchiver.archivedData(withRootObject: GlobalVariables.arrayOfTrucks)
+        UserDefaults.standard.set(data, forKey: "TruckList")
+        print("Trucks Saved")
+        
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
