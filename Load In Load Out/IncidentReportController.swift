@@ -31,7 +31,7 @@ class IncidentReportController : CustomViewController, WKNavigationDelegate {
         // Do any additional setup after loading the view, typically from a nib.        
         webView.translatesAutoresizingMaskIntoConstraints = false
         
-        let website = "https://atnewlife.org/facility-maintenance/"
+        let website = "https://form.jotformpro.com/71734578400962"
         let url = NSURL(string: website)
         let request = NSURLRequest(url: url! as URL)
         

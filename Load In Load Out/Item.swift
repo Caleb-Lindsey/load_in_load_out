@@ -30,7 +30,7 @@ class Item : NSObject, NSCoding {
     required init(coder aDecoder: NSCoder) {
         
         self.title = aDecoder.decodeObject(forKey: "itemTitle") as! String
-        self.setupLength = aDecoder.decodeObject(forKey: "setupLength") as! Int
+        self.setupLength = aDecoder.decodeInteger(forKey: "setupLength")
         self.setupInstructions = aDecoder.decodeObject(forKey: "setupInstructions") as! String
         
     }
@@ -38,7 +38,7 @@ class Item : NSObject, NSCoding {
     func initWithCoder(aDecoder: NSCoder) -> Item {
         
         self.title = aDecoder.decodeObject(forKey: "itemTitle") as! String
-        self.setupLength = aDecoder.decodeObject(forKey: "setupLength") as! Int
+        self.setupLength = aDecoder.decodeInteger(forKey: "setupLength")
         self.setupInstructions = aDecoder.decodeObject(forKey: "setupInstructions") as! String
         
         return self

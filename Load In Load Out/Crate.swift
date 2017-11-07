@@ -39,8 +39,7 @@ class Crate : NSObject, NSCoding {
         self.items = aDecoder.decodeObject(forKey: "items") as! [Item]
         self.type = aDecoder.decodeObject(forKey: "type") as! String
         self.code = aDecoder.decodeObject(forKey: "code") as! UIImage
-        self.location = aDecoder.decodeObject(forKey: "location") as! Int
-
+        self.location = aDecoder.decodeInteger(forKey: "location")
         
     }
     
@@ -50,7 +49,7 @@ class Crate : NSObject, NSCoding {
         self.items = aDecoder.decodeObject(forKey: "items") as! [Item]
         self.type = aDecoder.decodeObject(forKey: "type") as! String
         self.code = aDecoder.decodeObject(forKey: "code") as! UIImage
-        self.location = aDecoder.decodeObject(forKey: "location") as! Int
+        self.location = aDecoder.decodeInteger(forKey: "location")
         
         return self
     }

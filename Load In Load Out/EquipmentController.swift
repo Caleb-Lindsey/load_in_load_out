@@ -147,7 +147,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     let newCrateItemTitleField : CustomTextField = {
         let textField = CustomTextField()
         textField.textColor = UIColor.white
-        textField.attributedPlaceholder = NSAttributedString(string: "Name of item", attributes: [NSForegroundColorAttributeName: UIColor.lightGray])
+        textField.attributedPlaceholder = NSAttributedString(string: "Name of item", attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         textField.backgroundColor = UIColor.clear
         textField.layer.borderColor = GlobalVariables.yellowColor.cgColor
         textField.layer.borderWidth = 0.4
@@ -354,11 +354,11 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func showlocation() {
+    @objc func showlocation() {
         print("Working")
     }
     
-    func expandCode() {
+    @objc func expandCode() {
         print("Working")
     }
     
@@ -387,6 +387,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         let filter = CIFilter(name: "CIQRCodeGenerator")
         filter?.setValue(data, forKey: "inputMessage")
         let img = UIImage(ciImage: (filter?.outputImage)!)
+        
         newCrateCodeView.image = img
         newCrateView.addSubview(newCrateCodeView)
         
@@ -443,7 +444,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func dismissCamera() {
+    @objc func dismissCamera() {
         UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseOut, animations: {
             
             self.cameraView.frame.origin.y = self.view.frame.height
@@ -456,7 +457,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         })
     }
     
-    func presentCamera() {
+    @objc func presentCamera() {
         
         cameraView.frame = CGRect(x: view.frame.width / 2 - 250, y: view.frame.height, width: 500, height: 500)
         view.addSubview(cameraView)
@@ -465,11 +466,11 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         let session = AVCaptureSession()
         
         // Define Capture Device
-        let captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
         
         do
         {
-            let input = try AVCaptureDeviceInput(device: captureDevice)
+            let input = try AVCaptureDeviceInput(device: captureDevice!)
             session.addInput(input)
         }
         catch
@@ -481,7 +482,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         session.addOutput(output)
         
         output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-        output.metadataObjectTypes = [AVMetadataObjectTypeQRCode]
+        output.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
         
         video = AVCaptureVideoPreviewLayer(session: session)
         video.frame = cameraView.bounds
@@ -503,13 +504,13 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func selectNewCrateType() {
+    @objc func selectNewCrateType() {
         
         // Leave empty?
         
     }
     
-    func dismissNewCrateView() {
+    @objc func dismissNewCrateView() {
         
         newItemArray.removeAll()
         newCrateContentsTable.reloadData()
@@ -530,17 +531,17 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+    func metadataOutput(_ captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         
-        if metadataObjects != nil && metadataObjects.count != 0 {
+        if metadataObjects.count != 0 {
             if let object = metadataObjects[0] as? AVMetadataMachineReadableCodeObject {
-                if object.type == AVMetadataObjectTypeQRCode {
+                if object.type == AVMetadataObject.ObjectType.qr {
                     let alert = UIAlertController(title: object.stringValue, message: "Would you like to create a new crate with this code?", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "No", style: .default, handler: nil))
                     alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (nil) in
-                            self.video.session.stopRunning()
+                            self.video.session?.stopRunning()
                             self.dismissCamera()
-                            self.newCrate(crateTitle: object.stringValue)
+                            self.newCrate(crateTitle: object.stringValue!)
                     }))
                     present(alert, animated: true, completion: nil)
                 }
@@ -584,7 +585,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         return label
     }
     
-    func addNewItem() {
+    @objc func addNewItem() {
         
         if newCrateItemTitleField.text != "" {
             
@@ -611,7 +612,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func completeNewCrate() {
+    @objc func completeNewCrate() {
         
         if newCrateLabel.text != "" && newItemArray.count != 0 {
             

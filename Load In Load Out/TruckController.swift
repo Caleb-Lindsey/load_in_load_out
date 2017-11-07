@@ -125,7 +125,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     let newTruckTitleField : CustomTextField = {
         let textField = CustomTextField()
         textField.textColor = UIColor.white
-        textField.attributedPlaceholder = NSAttributedString(string: "Enter Truck Title", attributes: [NSForegroundColorAttributeName: UIColor.lightGray])
+        textField.attributedPlaceholder = NSAttributedString(string: "Enter Truck Title", attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         textField.backgroundColor = UIColor.clear
         textField.layer.borderColor = GlobalVariables.yellowColor.cgColor
         textField.layer.borderWidth = 0.4
@@ -143,7 +143,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     let newTruckCaptainField : CustomTextField = {
         let textField = CustomTextField()
         textField.textColor = UIColor.white
-        textField.attributedPlaceholder = NSAttributedString(string: "Enter Captain Name", attributes: [NSForegroundColorAttributeName: UIColor.lightGray])
+        textField.attributedPlaceholder = NSAttributedString(string: "Enter Captain Name", attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         textField.backgroundColor = UIColor.clear
         textField.layer.borderColor = GlobalVariables.yellowColor.cgColor
         textField.layer.borderWidth = 0.4
@@ -197,6 +197,10 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        dataHandle.fillItemData()
+        dataHandle.fillCrateData()
+        dataHandle.fillTruckData()
         
         let statusBarHeight = statusBar.frame.height
         let navHeight = self.navigationController?.navigationBar.frame.height
@@ -435,7 +439,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         
     }
     
-    func newTruck() {
+    @objc func newTruck() {
         
         let statusBarHeight = statusBar.frame.height
         let navHeight = self.navigationController?.navigationBar.frame.height
@@ -496,7 +500,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         
     }
     
-    func dismissNewTruckView() {
+    @objc func dismissNewTruckView() {
         
         UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseOut, animations: {
             
@@ -517,7 +521,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         
     }
     
-    func completeTruck() {
+    @objc func completeTruck() {
         
         var alertMessage : String = ""
         var noErrors : Bool = true

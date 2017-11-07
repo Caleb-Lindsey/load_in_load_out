@@ -34,7 +34,7 @@ class Truck : NSObject, NSCoding {
         self.crates = aDecoder.decodeObject(forKey: "crates") as! [Crate]
         self.date = aDecoder.decodeObject(forKey: "date") as! Date
         self.notes = aDecoder.decodeObject(forKey: "notes") as! String
-        self.loaded = aDecoder.decodeObject(forKey: "loaded") as! Bool
+        self.loaded = aDecoder.decodeBool(forKey: "loaded")
         
         
     }
@@ -46,7 +46,7 @@ class Truck : NSObject, NSCoding {
         self.crates = aDecoder.decodeObject(forKey: "crates") as! [Crate]
         self.date = aDecoder.decodeObject(forKey: "date") as! Date
         self.notes = aDecoder.decodeObject(forKey: "notes") as! String
-        self.loaded = aDecoder.decodeObject(forKey: "loaded") as! Bool
+        self.loaded = aDecoder.decodeBool(forKey: "loaded")
         
         return self
     }
