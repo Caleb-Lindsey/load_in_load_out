@@ -198,10 +198,6 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataHandle.fillItemData()
-        dataHandle.fillCrateData()
-        dataHandle.fillTruckData()
-        
         let statusBarHeight = statusBar.frame.height
         let navHeight = self.navigationController?.navigationBar.frame.height
         
@@ -271,6 +267,12 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
             
         }
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        dataHandle.fillItemData()
+        dataHandle.fillCrateData()
+        dataHandle.fillTruckData()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
