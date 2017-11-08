@@ -16,6 +16,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     let arrayOfMinutes = Array(0...90)
     var newItemArray : [Item] = [Item]()
     var dataHandle = DataHandle()
+    var editCrateMode : Bool = false
     
     let createCrateButton : UIButton = {
         let button = UIButton()
@@ -98,6 +99,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.white.cgColor
+        button.addTarget(self, action: #selector(editCrate), for: .touchUpInside)
         return button
     }()
     
@@ -117,8 +119,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         let view = UIView()
         view.backgroundColor = GlobalVariables.grayColor
         view.layer.borderColor = GlobalVariables.yellowColor.cgColor
-        view.layer.borderWidth = 1
-        view.layer.cornerRadius = 8
+        view.layer.borderWidth = 3
         return view
     }()
     
@@ -287,11 +288,13 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
             return cell
         } else {
             let cell = newCrateContentsTable.dequeueReusableCell(withIdentifier: "newItemCell", for: indexPath)
+            
             if newItemArray.count != 0 {
                 cell.textLabel?.text = newItemArray[indexPath.row].title
             } else {
                 cell.textLabel?.text = ""
             }
+            
             cell.textLabel?.textAlignment = .center
             return cell
         }
@@ -354,6 +357,24 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            if tableView == crateTableView {
+                GlobalVariables.arrayOfCrates.remove(at: indexPath.row)
+                crateTableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
+                dataHandle.saveCrate()
+            } else if tableView == itemTableView {
+                GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].items.remove(at: indexPath.row)
+                itemTableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
+                dataHandle.saveCrate()
+            } else {
+                newItemArray.remove(at: indexPath.row)
+                newCrateContentsTable.deleteRows(at: [indexPath as IndexPath], with: .fade)
+            }
+        }
+    }
+    
     @objc func showlocation() {
         print("Working")
     }
@@ -370,10 +391,14 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func newCrate(crateTitle : String) {
+    func newCrate(crateTitle : String, newCrate : Bool) {
+        
+        let statusBarHeight = statusBar.frame.height
+        let navHeight = self.navigationController?.navigationBar.frame.height
+        let tabBarHeight = self.tabBarController?.tabBar.frame.height
         
         // View
-        newCrateView.frame = CGRect(x: 35, y: view.frame.height, width: view.frame.width - 70, height: 500)
+        newCrateView.frame = CGRect(x: 0, y: view.frame.height, width: view.frame.width, height: view.frame.height - statusBarHeight - navHeight! - tabBarHeight!)
         view.addSubview(newCrateView)
         
         // Crate Title
@@ -381,14 +406,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         newCrateLabel.text = crateTitle
         newCrateView.addSubview(newCrateLabel)
         
-        // Crate Code
         newCrateCodeView.frame = CGRect(x: newCrateView.frame.width - 15 - 100, y: 15, width: 100, height: 100)
-        let data = crateTitle.data(using: .ascii, allowLossyConversion: false)
-        let filter = CIFilter(name: "CIQRCodeGenerator")
-        filter?.setValue(data, forKey: "inputMessage")
-        let img = UIImage(ciImage: (filter?.outputImage)!)
-        
-        newCrateCodeView.image = img
         newCrateView.addSubview(newCrateCodeView)
         
         // Crate Type
@@ -407,7 +425,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         newCrateView.addSubview(newItemTimePicker)
         
         // Item Setup Description
-        newItemSetupDescription.frame = CGRect(x: newCrateItemTitleField.frame.origin.x, y: newCrateItemTitleField.frame.maxY + 15, width: newCrateTypeBar.frame.width / 2, height: newCrateView.frame.height - 15 - 50 - 50 - 15 - 35 - 15 - 15 - 50 - 15)
+        newItemSetupDescription.frame = CGRect(x: newCrateItemTitleField.frame.origin.x, y: newCrateItemTitleField.frame.maxY + 15, width: newCrateTypeBar.frame.width / 2, height: newCrateView.frame.height / 2)
         newCrateView.addSubview(newItemSetupDescription)
         
         // Add Item To Crate Button
@@ -429,12 +447,43 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         newCrateCreateButton.frame = CGRect(x: newCrateView.frame.width - 100 - 15, y: newCrateView.frame.height - 50 - 15, width: 100, height: 50)
         newCrateView.addSubview(newCrateCreateButton)
         
-        let statusBarHeight = statusBar.frame.height
-        let navHeight = self.navigationController?.navigationBar.frame.height
+        if newCrate {
+            
+            editCrateMode = false
+            newCrateContentsTable.reloadData()
+
+            // Crate Code
+            let data = crateTitle.data(using: .ascii, allowLossyConversion: false)
+            let filter = CIFilter(name: "CIQRCodeGenerator")
+            filter?.setValue(data, forKey: "inputMessage")
+            let img = UIImage(ciImage: (filter?.outputImage)!)
+            newCrateCodeView.image = img
+            
+        } else {
+            
+            editCrateMode = true
+            
+            newItemArray = GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].items
+            
+            newCrateContentsTable.reloadData()
+            
+            // Crate Code
+            newCrateCodeView.image = GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].code
+            
+            // Crate type
+            var count : Int = 0
+            for segment in GlobalVariables.arrayOfTypes {
+                if GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].type == segment {
+                    newCrateTypeBar.selectedSegmentIndex = count
+                }
+                count += 1
+            }
+            
+        }
         
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
             
-            self.newCrateView.frame.origin.y = statusBarHeight + navHeight! + 50
+            self.newCrateView.frame.origin.y = statusBarHeight + navHeight!
             
         }, completion: { (finished: Bool) in
             
@@ -487,6 +536,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         video = AVCaptureVideoPreviewLayer(session: session)
         video.frame = cameraView.bounds
         video.masksToBounds = true
+        video.videoGravity = .resizeAspectFill
         cameraView.layer.addSublayer(video)
         
         session.startRunning()
@@ -497,7 +547,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
             
         }, completion: { (finished: Bool) in
             
-            self.dismissButton.frame = CGRect(x: self.cameraView.frame.width / 2 - 25, y: self.cameraView.frame.height - 15 - 25, width: 50, height: 50)
+            self.dismissButton.frame = CGRect(x: self.cameraView.frame.width / 2 - 25, y: self.cameraView.frame.height - 15 - 50, width: 50, height: 50)
             self.cameraView.addSubview(self.dismissButton)
             
         })
@@ -532,16 +582,17 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     }
     
     func metadataOutput(_ captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        
+        video.session?.stopRunning()
         if metadataObjects.count != 0 {
             if let object = metadataObjects[0] as? AVMetadataMachineReadableCodeObject {
                 if object.type == AVMetadataObject.ObjectType.qr {
                     let alert = UIAlertController(title: object.stringValue, message: "Would you like to create a new crate with this code?", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "No", style: .default, handler: nil))
+                    alert.addAction(UIAlertAction(title: "No", style: .default, handler: { (nil) in
+                        self.video.session?.startRunning()
+                    }))
                     alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (nil) in
-                            self.video.session?.stopRunning()
                             self.dismissCamera()
-                            self.newCrate(crateTitle: object.stringValue!)
+                            self.newCrate(crateTitle: object.stringValue!, newCrate: true)
                     }))
                     present(alert, animated: true, completion: nil)
                 }
@@ -590,7 +641,6 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         if newCrateItemTitleField.text != "" {
             
             newCrateItemTitleField.layer.borderColor = GlobalVariables.yellowColor.cgColor
-            
             let newItem : Item = Item(title: newCrateItemTitleField.text!, setupLength: newItemTimePicker.selectedRow(inComponent: 0), setupInstructions: newItemSetupDescription.text!)
             
             newItemArray.append(newItem)
@@ -614,19 +664,36 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     
     @objc func completeNewCrate() {
         
-        if newCrateLabel.text != "" && newItemArray.count != 0 {
+        if newCrateLabel.text != "" && newItemArray.count != 0 || editCrateMode == true {
             
-            let newCrate : Crate = Crate(title: newCrateLabel.text!, items: newItemArray, type: GlobalVariables.arrayOfTypes[newCrateTypeBar.selectedSegmentIndex], code: newCrateCodeView.image!, location: 0)
-            
-            GlobalVariables.arrayOfCrates.append(newCrate)
+            if editCrateMode {
+                GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].items = newItemArray
+                GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].type = GlobalVariables.arrayOfTypes[newCrateTypeBar.selectedSegmentIndex]
+                
+            } else {
+                let newCrate : Crate = Crate(title: newCrateLabel.text!, items: newItemArray, type: GlobalVariables.arrayOfTypes[newCrateTypeBar.selectedSegmentIndex], code: newCrateCodeView.image!, location: 0)
+                GlobalVariables.arrayOfCrates.append(newCrate)
+            }
             
             dataHandle.saveCrate()
+            
+            editCrateMode = false
             
             crateTableView.reloadData()
             
             dismissNewCrateView()
             
+        } else {
+            let alert = UIAlertController(title: "Insufficiant Data", message: "Missing items.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
+    }
+    
+    @objc func editCrate() {
+        
+        newCrate(crateTitle: GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].title, newCrate: false)
+        
     }
     
 }

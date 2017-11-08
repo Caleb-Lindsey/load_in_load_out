@@ -16,6 +16,9 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
     var video = AVCaptureVideoPreviewLayer()
     var checkCrate : Crate = Crate()
     var crateLoadedCount : Int = 0
+    let dataHandle : DataHandle = DataHandle()
+    var selectedRow : Int = Int()
+    var navTitle : String = String()
     
     let truckTitleLable : UILabel = {
         let label = UILabel()
@@ -55,7 +58,6 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
     
     let loadButton : UIButton = {
         let button = UIButton()
-        button.setTitle("Load In", for: .normal)
         button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.titleLabel?.textAlignment = .center
         button.layer.borderWidth = 0.5
@@ -80,7 +82,6 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
         let label = UILabel()
         label.textColor = GlobalVariables.yellowColor
         label.font = UIFont(name: "Helvetica", size: 30)
-        label.text = "Check items."
         label.textAlignment = .center
         return label
     }()
@@ -91,9 +92,49 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
         return tableView
     }()
     
+    let completedTruckView : UIView = {
+        let view = UIView()
+        view.backgroundColor = GlobalVariables.grayColor
+        view.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        view.layer.borderWidth = 4
+        return view
+    }()
+    
+    let completeLabel : UILabel = {
+        let label = UILabel()
+        label.textColor = GlobalVariables.yellowColor
+        label.font = UIFont(name: "Helvetica", size: 50)
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let completeButton : UIButton = {
+        let button = UIButton()
+        button.setTitle("Okay", for: .normal)
+        button.backgroundColor = GlobalVariables.grayColor
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
+        button.setTitleColor(GlobalVariables.yellowColor, for: .normal)
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        button.addTarget(self, action: #selector(okayButton), for: .touchUpInside)
+        button.isEnabled = false
+        return button
+    }()
+    
     init(truck : Truck) {
         self.truck = truck
         truckTitleLable.text = truck.title
+        
+        if truck.loaded {
+            completeLabel.text = "Unloading Complete!"
+            loadButton.setTitle("Load Out", for: .normal)
+            navTitle = "Unload Truck"
+        } else {
+            completeLabel.text = "Loading Complete!"
+            loadButton.setTitle("Load In", for: .normal)
+            navTitle = "Load Truck"
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -104,9 +145,10 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "Load Truck"
+        self.navigationItem.title = navTitle
         let statusBarHeight = statusBar.frame.height
         let navHeight = self.navigationController?.navigationBar.frame.height
+        let tabBarHeight = self.tabBarController?.tabBar.frame.height
         
         // Place truck title
         truckTitleLable.frame = CGRect(x: 15, y: statusBarHeight + navHeight! + 15, width: view.frame.width / 2, height: 50)
@@ -156,6 +198,19 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
         checkTableView.register(CrateCell.self, forCellReuseIdentifier: "checkCell")
         crateView.addSubview(checkTableView)
         
+        // Place complete truck view
+        completedTruckView.frame = CGRect(x: 0, y: view.frame.height, width: view.frame.width, height: view.frame.height - statusBarHeight - navHeight! - tabBarHeight!)
+        view.addSubview(completedTruckView)
+        
+        // Place complete label
+        completeLabel.frame = CGRect(x: 0, y: completedTruckView.frame.height / 2 - 50, width: completedTruckView.frame.width, height: 100)
+        completedTruckView.addSubview(completeLabel)
+        
+        // Place complete button
+        completeButton.frame = CGRect(x: 0, y: completeLabel.frame.maxY + 15, width: 200, height: 50)
+        completeButton.center.x = completeLabel.center.x
+        completedTruckView.addSubview(completeButton)
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -180,13 +235,24 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView == crateTableView {
+            
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
+        
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if tableView == crateTableView {
-            return "Crates to Load"
+            if truck.loaded {
+                return "Crates to Unload"
+            } else {
+                return "Crates to Load"
+            }
         } else {
             return "Check Crate Contents."
         }
@@ -294,8 +360,13 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
                 crateLoadedCount += 1
                 
                 if crateLoadedCount == truck.crates.count {
-                    
-                    navigationController?.pushViewController(TruckController(), animated: true)
+                    if truck.loaded {
+                        truck.loaded = false
+                    } else {
+                        truck.loaded = true
+                    }
+                    dataHandle.saveTruck()
+                    presentCompleteView()
                     
                 } else {
                     dismissCrateView()
@@ -305,6 +376,25 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
             count += 1
         }
         
+    }
+    
+    func presentCompleteView() {
+        
+        let statusBarHeight = statusBar.frame.height
+        let navHeight = self.navigationController?.navigationBar.frame.height
+        
+        UIView.animate(withDuration: 0.35, delay: 0.2, options: .curveEaseOut, animations: {
+            
+            self.completedTruckView.frame.origin.y = statusBarHeight + navHeight!
+            
+            }, completion: {(finished: Bool) in
+                self.completeButton.isEnabled = true
+        })
+        
+    }
+    
+    @objc func okayButton() {
+        navigationController?.pushViewController(TruckController(), animated: true)
     }
     
 }

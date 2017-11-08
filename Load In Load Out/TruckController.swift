@@ -201,6 +201,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         
         let statusBarHeight = statusBar.frame.height
         let navHeight = self.navigationController?.navigationBar.frame.height
+        self.navigationItem.hidesBackButton = true
         
         truckTableView.selectRow(at: IndexPath(row: 0, section: 0) , animated: true, scrollPosition: .none)
         truckTableView.cellForRow(at: IndexPath(row: 0, section: 0))?.isSelected = true
@@ -272,9 +273,11 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     
     override func viewWillAppear(_ animated: Bool) {
         
-        dataHandle.fillItemData()
-        dataHandle.fillCrateData()
-        dataHandle.fillTruckData()
+        if self.isBeingPresented {
+            truckTableView.reloadData()
+            print("reloading!")
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -576,6 +579,8 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         navigationController?.pushViewController(loadTruckView, animated: true)
     
     }
+    
+    
     
 }
 
