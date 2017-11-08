@@ -73,6 +73,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.white.cgColor
+        button.addTarget(self, action: #selector(loadTruck), for: .touchUpInside)
         return button
     }()
     
@@ -270,6 +271,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         dataHandle.fillItemData()
         dataHandle.fillCrateData()
         dataHandle.fillTruckData()
@@ -566,6 +568,13 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         }
         
         
+    }
+    
+    @objc func loadTruck() {
+        
+        let loadTruckView = LoadTruckController(truck: GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!])
+        navigationController?.pushViewController(loadTruckView, animated: true)
+    
     }
     
 }

@@ -22,8 +22,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         window?.makeKeyAndVisible()
+        let homeController = CustomTabBar()
         
-        window?.rootViewController = UINavigationController(rootViewController: CustomTabBar())
+        window?.rootViewController = UINavigationController(rootViewController: homeController)
+        homeController.navigationController?.isNavigationBarHidden = true
         
         // Fill mock data for UIDevelopment
         let dataHandle = DataHandle()

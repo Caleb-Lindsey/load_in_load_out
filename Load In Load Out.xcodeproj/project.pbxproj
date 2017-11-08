@@ -14,6 +14,7 @@
 		2E57493B1F96EFEA0020A6CF /* TruckController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E57493A1F96EFEA0020A6CF /* TruckController.swift */; };
 		2E57493E1F96F0320020A6CF /* EquipmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E57493D1F96F0320020A6CF /* EquipmentController.swift */; };
 		2E5749421F96F1BC0020A6CF /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5749411F96F1BC0020A6CF /* CustomViewController.swift */; };
+		2E7DFABA1FB25E6900A0EC57 /* CustomCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7DFAB91FB25E6900A0EC57 /* CustomCameraView.swift */; };
 		2E811AC71F964E5000A959B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E811AC61F964E5000A959B2 /* AppDelegate.swift */; };
 		2E811ACF1F964E5000A959B2 /* Load_In_Load_Out.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2E811ACD1F964E5000A959B2 /* Load_In_Load_Out.xcdatamodeld */; };
 		2E811AD11F964E5000A959B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E811AD01F964E5000A959B2 /* Assets.xcassets */; };
@@ -25,6 +26,7 @@
 		2E9C72C41FABB0EE00B1E7A1 /* CrateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9C72C31FABB0EE00B1E7A1 /* CrateCell.swift */; };
 		2E9C72C61FABBDC300B1E7A1 /* TruckCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9C72C51FABBDC300B1E7A1 /* TruckCell.swift */; };
 		2E9EE9EA1FA8413B00A9142C /* CustomeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EE9E91FA8413B00A9142C /* CustomeTextField.swift */; };
+		2EBFD3091FB2183800BACB3B /* LoadTruckController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBFD3081FB2183800BACB3B /* LoadTruckController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,7 @@
 		2E57493A1F96EFEA0020A6CF /* TruckController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TruckController.swift; sourceTree = "<group>"; };
 		2E57493D1F96F0320020A6CF /* EquipmentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EquipmentController.swift; sourceTree = "<group>"; };
 		2E5749411F96F1BC0020A6CF /* CustomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
+		2E7DFAB91FB25E6900A0EC57 /* CustomCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCameraView.swift; sourceTree = "<group>"; };
 		2E811AC31F964E5000A959B2 /* Load In Load Out.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Load In Load Out.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E811AC61F964E5000A959B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2E811ACE1F964E5000A959B2 /* Load_In_Load_Out.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Load_In_Load_Out.xcdatamodel; sourceTree = "<group>"; };
@@ -69,6 +72,7 @@
 		2E9C72C31FABB0EE00B1E7A1 /* CrateCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrateCell.swift; sourceTree = "<group>"; };
 		2E9C72C51FABBDC300B1E7A1 /* TruckCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TruckCell.swift; sourceTree = "<group>"; };
 		2E9EE9E91FA8413B00A9142C /* CustomeTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomeTextField.swift; sourceTree = "<group>"; };
+		2EBFD3081FB2183800BACB3B /* LoadTruckController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadTruckController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,8 +106,32 @@
 				2E57493A1F96EFEA0020A6CF /* TruckController.swift */,
 				2E57493D1F96F0320020A6CF /* EquipmentController.swift */,
 				2E21FCED1F99971B00FBEF43 /* IncidentReportController.swift */,
+				2EBFD3081FB2183800BACB3B /* LoadTruckController.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		2E7DFABB1FB2602400A0EC57 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				2E21FCEF1F9997D100FBEF43 /* Truck.swift */,
+				2E21FCF11F99981B00FBEF43 /* Crate.swift */,
+				2E21FCF31F99983900FBEF43 /* Item.swift */,
+			);
+			name = Objects;
+			sourceTree = "<group>";
+		};
+		2E7DFABC1FB2603B00A0EC57 /* Customs */ = {
+			isa = PBXGroup;
+			children = (
+				2E811AF81F964F7100A959B2 /* CustomTabBar.swift */,
+				2E5749411F96F1BC0020A6CF /* CustomViewController.swift */,
+				2E9EE9E91FA8413B00A9142C /* CustomeTextField.swift */,
+				2E9C72C51FABBDC300B1E7A1 /* TruckCell.swift */,
+				2E9C72C31FABB0EE00B1E7A1 /* CrateCell.swift */,
+				2E7DFAB91FB25E6900A0EC57 /* CustomCameraView.swift */,
+			);
+			name = Customs;
 			sourceTree = "<group>";
 		};
 		2E811ABA1F964E5000A959B2 = {
@@ -136,14 +164,8 @@
 				2E811AD21F964E5000A959B2 /* LaunchScreen.storyboard */,
 				2E811AD51F964E5000A959B2 /* Info.plist */,
 				2E811ACD1F964E5000A959B2 /* Load_In_Load_Out.xcdatamodeld */,
-				2E811AF81F964F7100A959B2 /* CustomTabBar.swift */,
-				2E5749411F96F1BC0020A6CF /* CustomViewController.swift */,
-				2E9EE9E91FA8413B00A9142C /* CustomeTextField.swift */,
-				2E21FCEF1F9997D100FBEF43 /* Truck.swift */,
-				2E21FCF11F99981B00FBEF43 /* Crate.swift */,
-				2E21FCF31F99983900FBEF43 /* Item.swift */,
-				2E9C72C51FABBDC300B1E7A1 /* TruckCell.swift */,
-				2E9C72C31FABB0EE00B1E7A1 /* CrateCell.swift */,
+				2E7DFABB1FB2602400A0EC57 /* Objects */,
+				2E7DFABC1FB2603B00A0EC57 /* Customs */,
 			);
 			path = "Load In Load Out";
 			sourceTree = "<group>";
@@ -305,6 +327,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E7DFABA1FB25E6900A0EC57 /* CustomCameraView.swift in Sources */,
 				2E5749421F96F1BC0020A6CF /* CustomViewController.swift in Sources */,
 				2E21FCF21F99981B00FBEF43 /* Crate.swift in Sources */,
 				2E811AF91F964F7100A959B2 /* CustomTabBar.swift in Sources */,
@@ -316,6 +339,7 @@
 				2E811ACF1F964E5000A959B2 /* Load_In_Load_Out.xcdatamodeld in Sources */,
 				2E9C72C61FABBDC300B1E7A1 /* TruckCell.swift in Sources */,
 				2E21FCEE1F99971B00FBEF43 /* IncidentReportController.swift in Sources */,
+				2EBFD3091FB2183800BACB3B /* LoadTruckController.swift in Sources */,
 				2E9C72C41FABB0EE00B1E7A1 /* CrateCell.swift in Sources */,
 				2E9EE9EA1FA8413B00A9142C /* CustomeTextField.swift in Sources */,
 				2E21FCF01F9997D100FBEF43 /* Truck.swift in Sources */,
