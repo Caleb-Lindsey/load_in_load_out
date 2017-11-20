@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TruckController : CustomViewController, UITableViewDelegate, UITableViewDataSource {
+class TruckController : CustomViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UITextViewDelegate {
     
     // Variables
     var newTruckCrateArray : [Crate] = [Crate]()
@@ -163,8 +163,8 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         return tableView
     }()
     
-    let newTruckNotesView : UITextView = {
-        let textView = UITextView()
+    let newTruckNotesView : CustomTextView = {
+        let textView = CustomTextView()
         textView.textColor = UIColor.white
         textView.backgroundColor = UIColor.clear
         textView.font = UIFont(name: "Helvetica", size: 15)
@@ -459,10 +459,12 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         
         // New Truck Title
         newTruckTitleField.frame = CGRect(x: 15, y: 15, width: newTruckView.frame.width / 2 - 7.5 - 15, height: 30)
+        newTruckTitleField.delegate = self
         newTruckView.addSubview(newTruckTitleField)
         
         // New Truck Captain
         newTruckCaptainField.frame = CGRect(x: newTruckTitleField.frame.origin.x, y: newTruckTitleField.frame.maxY + 15, width: newTruckTitleField.frame.width, height: newTruckTitleField.frame.height)
+        newTruckCaptainField.delegate = self
         newTruckView.addSubview(newTruckCaptainField)
         
         // New Truck Date
@@ -558,7 +560,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         
         if noErrors {
             
-            let newTruck : Truck = Truck(title: newTruckTitleField.text!, captain: newTruckCaptainField.text!, crates: newTruckCrateArray, date: newTruckDatePicker.date, notes: newTruckNotesView.text!, loaded: false)
+            let newTruck : Truck = Truck(title: newTruckTitleField.text!, captain: newTruckCaptainField.text!, crates: newTruckCrateArray, loadables: [] ,date: newTruckDatePicker.date, notes: newTruckNotesView.text!, loaded: false)
             GlobalVariables.arrayOfTrucks.append(newTruck)
             dataHandle.saveTruck()
             truckTableView.reloadData()
@@ -580,7 +582,27 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool
+    {
+        if text == "\n"
+        {
+            view.endEditing(true)
+            return false
+        }
+        else
+        {
+            return true
+        }
+    }
     
 }
 

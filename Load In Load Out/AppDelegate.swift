@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let dataHandle = DataHandle()
         dataHandle.mockDataFill()
         dataHandle.fillItemData()
+        dataHandle.fillLoadableData()
         dataHandle.fillCrateData()
         dataHandle.fillTruckData()
         

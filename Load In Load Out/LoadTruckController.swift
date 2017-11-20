@@ -120,10 +120,21 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
         button.isEnabled = false
         return button
     }()
+
+    let truckNotes : UITextView = {
+        let textView = UITextView()
+        textView.textColor = UIColor.white
+        textView.backgroundColor = UIColor.clear
+        textView.font = UIFont(name: "Helvetica", size: 11)
+        textView.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        textView.layer.borderWidth = 0.3
+        return textView
+    }()
     
     init(truck : Truck) {
         self.truck = truck
         truckTitleLable.text = truck.title
+        truckNotes.text = truck.notes
         
         if truck.loaded {
             completeLabel.text = "Unloading Complete!"
@@ -174,6 +185,13 @@ class LoadTruckController : CustomViewController, UITableViewDelegate, UITableVi
         crateTableView.dataSource = self
         crateTableView.register(CrateCell.self, forCellReuseIdentifier: "crateCell")
         view.addSubview(crateTableView)
+        
+        // Place truck notes view
+        truckNotes.frame = CGRect(x: cameraView.frame.origin.x, y: cameraView.frame.maxY + 15, width: cameraView.frame.width, height: 200)
+        view.addSubview(truckNotes)
+        
+        // Place crate notes view
+        
         
         // Place Crate View Slider
         crateView.frame = CGRect(x: 0, y: cameraView.frame.height, width: cameraView.frame.width, height: cameraView.frame.height)

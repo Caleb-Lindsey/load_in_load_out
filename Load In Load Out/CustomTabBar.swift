@@ -29,12 +29,17 @@ class CustomTabBar : UITabBarController {
         equipmentNavController.tabBarItem.title = "Equipment"
         equipmentNavController.tabBarItem.image = UIImage(named: "equipment")
         
+        let itemController = ItemController()
+        let itemNavController = UINavigationController(rootViewController: itemController)
+        itemNavController.tabBarItem.title = "Items"
+        itemNavController.tabBarItem.image = UIImage(named: "light")
+        
         let incidentController = IncidentReportController()
         incidentController.tabBarItem.title = "Incident Report"
         incidentController.tabBarItem.image = UIImage(named: "incident")
         
         //Array of viewcontrollers
-        viewControllers = [truckNavController, equipmentNavController, incidentController]
+        viewControllers = [truckNavController, equipmentNavController, itemNavController, incidentController]
         
     }
     
