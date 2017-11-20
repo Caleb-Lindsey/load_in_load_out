@@ -48,6 +48,14 @@ class ItemController : CustomViewController, UITableViewDataSource, UITableViewD
         return label
     }()
     
+    let itemLocation : UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.white
+        label.font = UIFont(name: "Helvetica", size: 18)
+        label.text = "Location: "
+        return label
+    }()
+    
     let itemSetupDescription : UITextView = {
         let textView = UITextView()
         textView.textColor = UIColor.white
@@ -159,6 +167,10 @@ class ItemController : CustomViewController, UITableViewDataSource, UITableViewD
         itemSetupDescription.frame = CGRect(x: itemSetupLength.frame.origin.x, y: itemSetupLength.frame.maxY + 15, width: itemSetupLength.frame.width, height: 400)
         view.addSubview(itemSetupDescription)
         
+        // Place setup location
+        itemLocation.frame = CGRect(x: itemSetupDescription.frame.origin.x, y: itemSetupDescription.frame.maxY + 15, width: 200, height: 50)
+        view.addSubview(itemLocation)
+        
         
         setupView()
         
@@ -171,6 +183,7 @@ class ItemController : CustomViewController, UITableViewDataSource, UITableViewD
             titleLabel.text = GlobalVariables.arrayOfLoadables[0].title
             itemSetupLength.text = "Setup Length: \(GlobalVariables.arrayOfLoadables[0].setupLength)"
             itemSetupDescription.text = GlobalVariables.arrayOfLoadables[0].setupInstructions
+            itemLocation.text = "Location: \(GlobalVariables.arrayOfLoadables[0].location)"
             
         }
         
@@ -196,6 +209,9 @@ class ItemController : CustomViewController, UITableViewDataSource, UITableViewD
         
         // Setup Description
         itemSetupDescription.text = GlobalVariables.arrayOfLoadables[indexPath.row].setupInstructions
+        
+        // Item Location
+        itemLocation.text = "Location: \(GlobalVariables.arrayOfLoadables[indexPath.row].location)"
         
         
         
@@ -396,7 +412,7 @@ class ItemController : CustomViewController, UITableViewDataSource, UITableViewD
             newItemSetupView.text = "(No setup instructions.)"
         }
         
-        let newItem = LoadableItem(title: newItemTitle.text!, setupLength: newItemTimePicker.selectedRow(inComponent: 0), setupInstructions: newItemSetupView.text!)
+        let newItem = LoadableItem(title: newItemTitle.text!, setupLength: newItemTimePicker.selectedRow(inComponent: 0), setupInstructions: newItemSetupView.text!, location: 0)
         GlobalVariables.arrayOfLoadables.append(newItem)
         dataHandle.saveLoadableItem()
         dismissNewItem()

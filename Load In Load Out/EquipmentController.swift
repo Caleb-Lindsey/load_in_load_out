@@ -44,9 +44,11 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     
     let typeLabel : UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.white
+        label.textColor = UIColor.black
         label.font = UIFont(name: "Helvetica", size: 25)
         label.textAlignment = .center
+        label.layer.cornerRadius = 8
+        label.layer.masksToBounds = true
         return label
     }()
     
@@ -55,16 +57,6 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         button.setImage(UIImage(named: "location"), for: .normal)
         button.addTarget(self, action: #selector(showlocation), for: .touchUpInside)
         button.adjustsImageWhenHighlighted = true
-        return button
-    }()
-    
-    let QRcodeView : UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "QRCode"), for: .normal)
-        button.layer.cornerRadius = 8
-        button.setTitleColor(UIColor.darkGray, for: .highlighted)
-        button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(expandCode), for: .touchUpInside)
         return button
     }()
     
@@ -114,6 +106,32 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         button.addTarget(self, action: #selector(dismissCamera), for: .touchUpInside)
         return button
     }()
+    
+    let dimmerView : UIView = {
+        let view = UIView()
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(blurEffectView)
+        return view
+    }()
+    
+    let dismissMapButton : UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "xIcon"), for: .normal)
+        button.addTarget(self, action: #selector(dismissMap), for: .touchUpInside)
+        return button
+    }()
+    
+    let dunkMapView : UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "Dunk_Schematic")
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    //*************************************************************************************************************
     
     let newCrateView : UIView = {
         let view = UIView()
@@ -222,6 +240,9 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         
         if let window = UIApplication.shared.keyWindow {
         
+            // Place dimmer view
+            dimmerView.frame = view.frame
+            
             // Place create crate button
             createCrateButton.frame = CGRect(x: 0, y: statusBarHeight + navHeight!, width: window.frame.width * (4/10), height: 50)
             view.addSubview(createCrateButton)
@@ -236,9 +257,6 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
             // Place title label
             titleLabel.frame = CGRect(x: crateTableView.frame.maxX + 25, y: statusBarHeight + navHeight! + 25, width: window.frame.width - crateTableView.frame.width - 25 - 25 - 100 - 25, height: 50)
             view.addSubview(titleLabel)
-            
-            // Place QRcode View
-            QRcodeView.frame = CGRect(x: window.frame.width - 100 - 25, y: statusBarHeight + navHeight! + 25, width: 100, height: 100)
             
             // Place location button
             locationButton.frame = CGRect(x: window.frame.width - 100 - 25, y: statusBarHeight + navHeight! + 25, width: 100, height: 100)
@@ -328,9 +346,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
             
             // Type label
             typeLabel.text = GlobalVariables.arrayOfCrates[indexPath.row].type
-            
-            // QRCode Image
-            QRcodeView.imageView?.image = GlobalVariables.arrayOfCrates[indexPath.row].code
+            typeLabel.backgroundColor = crateColor(crate: GlobalVariables.arrayOfCrates[indexPath.row])
             
             // Item table view
             itemTableView.reloadData()
@@ -376,11 +392,42 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     }
     
     @objc func showlocation() {
-        print("Working")
+        
+        view.addSubview(dimmerView)
+        dunkMapView.layer.opacity = 0
+        dunkMapView.frame = locationButton.frame
+        dimmerView.addSubview(dunkMapView)
+        
+        dismissMapButton.frame = CGRect(x: dimmerView.frame.width - 15 - 50, y: 100, width: 50, height: 50)
+        dimmerView.addSubview(dismissMapButton)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+            
+            self.dunkMapView.layer.opacity = 1
+            self.dimmerView.layer.opacity = 1
+            self.dunkMapView.frame = self.view.frame
+            
+            
+        }, completion: { (finished: Bool) in
+            
+            
+            
+        })
+        
     }
     
-    @objc func expandCode() {
-        print("Working")
+    @objc func dismissMap() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+            
+            self.dunkMapView.layer.opacity = 0
+            self.dunkMapView.frame = self.locationButton.frame
+            self.dimmerView.layer.opacity = 0
+            
+        }, completion: { (finished: Bool) in
+            
+            self.dimmerView.removeFromSuperview()
+            
+        })
     }
     
     func setupView() {
@@ -388,6 +435,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
             crateTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .none)
             titleLabel.text = GlobalVariables.arrayOfCrates[0].title
             typeLabel.text = GlobalVariables.arrayOfCrates[0].type
+            typeLabel.backgroundColor = crateColor(crate: GlobalVariables.arrayOfCrates[0])
         }
     }
     
@@ -693,6 +741,29 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     @objc func editCrate() {
         
         newCrate(crateTitle: GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].title, newCrate: false)
+        
+    }
+    
+    func crateColor(crate : Crate) -> UIColor {
+        
+        var color : UIColor = UIColor.red
+        
+        switch crate.type {
+        case GlobalVariables.arrayOfTypes[0]: // Lighting
+            color = UIColor.yellow
+        case GlobalVariables.arrayOfTypes[1]: // Band
+            color = UIColor.green
+        case GlobalVariables.arrayOfTypes[2]: // Stage
+            color = UIColor.purple
+        case GlobalVariables.arrayOfTypes[3]: // Audio
+            color = UIColor.blue
+        case GlobalVariables.arrayOfTypes[4]: // Visual
+            color = UIColor.orange
+        default:
+            color = UIColor.clear // ERROR
+        }
+        
+        return color
         
     }
     

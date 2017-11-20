@@ -14,11 +14,13 @@ class LoadableItem : NSObject, NSCoding {
     var title : String = String()
     var setupLength : Int = Int()
     var setupInstructions : String = String()
+    var location : Int = 0
     
-    init(title: String, setupLength: Int, setupInstructions: String) {
+    init(title: String, setupLength: Int, setupInstructions: String, location: Int) {
         self.title = title
         self.setupLength = setupLength
         self.setupInstructions = setupInstructions
+        self.location = 0
     }
     
     override init() {

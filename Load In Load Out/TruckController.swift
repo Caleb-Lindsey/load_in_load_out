@@ -373,6 +373,17 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            if tableView == truckTableView {
+                GlobalVariables.arrayOfTrucks.remove(at: indexPath.row)
+                truckTableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
+                dataHandle.saveTruck()
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if tableView == truckTableView {
             return "Trucks"

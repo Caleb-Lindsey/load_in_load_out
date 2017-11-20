@@ -41,9 +41,9 @@ class DataHandle {
         let item9 : Item = Item(title: "Left Metal Strut", setupLength: 10, setupInstructions: "You need a wrench.")
         let item10 : Item = Item(title: "Right Metal Strut", setupLength: 10, setupInstructions: "You need a wrench.")
 
-        let loadable1 : LoadableItem = LoadableItem(title: "Stage Truss", setupLength: 3, setupInstructions: "Set it up fast.")
-        let loadable2 : LoadableItem = LoadableItem(title: "Sound Board", setupLength: 7, setupInstructions: "Carfully.")
-        let loadable3 : LoadableItem = LoadableItem(title: "Green Room Table", setupLength: 0, setupInstructions: "Fragile Glass.")
+        let loadable1 : LoadableItem = LoadableItem(title: "Stage Truss", setupLength: 3, setupInstructions: "Set it up fast.", location: 0)
+        let loadable2 : LoadableItem = LoadableItem(title: "Sound Board", setupLength: 7, setupInstructions: "Carfully.", location: 0)
+        let loadable3 : LoadableItem = LoadableItem(title: "Green Room Table", setupLength: 0, setupInstructions: "Fragile Glass.", location: 0)
 
         let crate1 : Crate = Crate(title: "Stage Crate 1", items: [item1, item2, item3], type: "Audio", code: UIImage(named: "QRCode")!, location: 1)
         let crate2 : Crate = Crate(title: "Stage Crate 2", items: [item4, item5, item6], type: "Band", code: UIImage(named: "QRCode")!, location: 2)

@@ -14,7 +14,7 @@ class Item : NSObject, NSCoding {
     var title : String = String()
     var setupLength : Int = Int()
     var setupInstructions : String = String()
-        
+    
     init(title: String, setupLength: Int, setupInstructions: String) {
         self.title = title
         self.setupLength = setupLength
