@@ -63,6 +63,33 @@ class Crate : NSObject, NSCoding {
         
     }
     
+    func typeIcon() -> UIImage {
+        
+        var image : UIImage = UIImage()
+        
+        switch self.type {
+        case GlobalVariables.arrayOfTypes[0]: // Visuals
+            image = UIImage(named: "Visuals")!
+        case GlobalVariables.arrayOfTypes[1]: // Lighting
+            image = UIImage(named: "Lighting")!
+        case GlobalVariables.arrayOfTypes[2]: // Audio
+            image = UIImage(named: "Audio")!
+        case GlobalVariables.arrayOfTypes[3]: // Stage
+            image = UIImage(named: "Stage")!
+        case GlobalVariables.arrayOfTypes[4]: // TV
+            image = UIImage(named: "TV")!
+        case GlobalVariables.arrayOfTypes[5]: // Band
+            image = UIImage(named: "Band")!
+        case GlobalVariables.arrayOfTypes[6]: // Misc
+            image = UIImage(named: "Misc")!
+        default:
+            image = UIImage(named: "")! // ERROR
+        }
+        
+        return image
+        
+    }
+    
 }
 
 

@@ -69,6 +69,7 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     
     let loadTruckButton : UIButton = {
         let button = UIButton()
+        button.setTitle("Load Truck", for: .normal)
         button.backgroundColor = GlobalVariables.grayColor
         button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.layer.borderWidth = 0.5
@@ -198,13 +199,10 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         let statusBarHeight = statusBar.frame.height
         let navHeight = self.navigationController?.navigationBar.frame.height
         self.navigationItem.hidesBackButton = true
-        
-        truckTableView.selectRow(at: IndexPath(row: 0, section: 0) , animated: true, scrollPosition: .none)
-        truckTableView.cellForRow(at: IndexPath(row: 0, section: 0))?.isSelected = true
         
         if let window = UIApplication.shared.keyWindow {
             
@@ -313,23 +311,31 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == truckTableView {
-            return GlobalVariables.arrayOfTrucks.count
-        } else if tableView == crateTableView {
-            return GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].crates.count
-        } else if tableView == itemTableView {
-            return GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].crates[(crateTableView.indexPathForSelectedRow?.row)!].items.count
-        } else if tableView == newTruckAllCratesTable {
-            return GlobalVariables.arrayOfCrates.count
+        if GlobalVariables.arrayOfTrucks != [] {
+            if tableView == truckTableView {
+                return GlobalVariables.arrayOfTrucks.count
+            } else if tableView == crateTableView {
+                return GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].crates.count
+            } else if tableView == itemTableView {
+                return GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!].crates[(crateTableView.indexPathForSelectedRow?.row)!].items.count
+            } else if tableView == newTruckAllCratesTable {
+                return GlobalVariables.arrayOfCrates.count
+            } else {
+                return newTruckCrateArray.count
+            }
         } else {
-            return newTruckCrateArray.count
+            if tableView == newTruckAllCratesTable {
+                return GlobalVariables.arrayOfCrates.count
+            } else {
+                return newTruckCrateArray.count
+            }
         }
+
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView == truckTableView {
             return 100
-
         } else {
             return 50
         }
@@ -399,7 +405,8 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     }
     
     func setupView() {
-        if GlobalVariables.arrayOfTrucks.count != 0 {
+        if GlobalVariables.arrayOfTrucks != [] {
+            truckTableView.cellForRow(at: IndexPath(row: 0, section: 0))?.isSelected = true
             truckTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .none)
             crateTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .none)
             truckTitleLable.text = GlobalVariables.arrayOfTrucks[0].title
@@ -463,7 +470,6 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
         let navHeight = self.navigationController?.navigationBar.frame.height
         let tabBarHeight = self.tabBarController?.tabBar.frame.height
 
-        
         // New Truck View
         newTruckView.frame = CGRect(x: 0, y: view.frame.height, width: view.frame.width, height: view.frame.height - statusBarHeight - navHeight! - tabBarHeight!)
         view.addSubview(newTruckView)
@@ -588,9 +594,10 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     
     @objc func loadTruck() {
         
-        let loadTruckView = LoadTruckController(truck: GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!])
-        navigationController?.pushViewController(loadTruckView, animated: true)
-    
+        if truckTableView.indexPathForSelectedRow != nil {
+            let loadTruckView = LoadTruckController(truck: GlobalVariables.arrayOfTrucks[(truckTableView.indexPathForSelectedRow?.row)!])
+            navigationController?.pushViewController(loadTruckView, animated: true)
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -600,19 +607,6 @@ class TruckController : CustomViewController, UITableViewDelegate, UITableViewDa
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool
-    {
-        if text == "\n"
-        {
-            view.endEditing(true)
-            return false
-        }
-        else
-        {
-            return true
-        }
     }
     
 }

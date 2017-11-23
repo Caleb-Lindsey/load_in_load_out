@@ -18,7 +18,7 @@ struct GlobalVariables {
     static var arrayOfCrates : [Crate] = [Crate]()
     static var arrayOfItems : [Item] = [Item]()
     static var arrayOfLoadables : [LoadableItem] = [LoadableItem]()
-    static var arrayOfTypes : [String] = ["Lighting", "Band", "Stage", "Audio", "Visual"]
+    static var arrayOfTypes : [String] = ["Visuals", "Lighting", "Audio", "Stage", "TV", "Band", "Misc"]
     static var arrayOfLocations : [Int] = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
     
 }
@@ -131,6 +131,8 @@ class DataHandle {
         print("Trucks Saved")
         
     }
+    
+    
     
 }
 

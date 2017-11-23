@@ -178,7 +178,7 @@ class ItemController : CustomViewController, UITableViewDataSource, UITableViewD
     
     func setupView() {
         
-        if GlobalVariables.arrayOfLoadables.count != 0 {
+        if GlobalVariables.arrayOfLoadables != [] {
             itemTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .none)
             titleLabel.text = GlobalVariables.arrayOfLoadables[0].title
             itemSetupLength.text = "Setup Length: \(GlobalVariables.arrayOfLoadables[0].setupLength)"
@@ -196,7 +196,11 @@ class ItemController : CustomViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return GlobalVariables.arrayOfLoadables.count
+        if GlobalVariables.arrayOfLoadables != [] {
+            return GlobalVariables.arrayOfLoadables.count
+        } else {
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -215,6 +219,17 @@ class ItemController : CustomViewController, UITableViewDataSource, UITableViewD
         
         
         
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            if tableView == itemTableView {
+                GlobalVariables.arrayOfLoadables.remove(at: indexPath.row)
+                itemTableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
+                dataHandle.saveLoadableItem()
+            }
+        }
     }
     
     @objc func newItem(itemTitle : String, newItem : Bool) {

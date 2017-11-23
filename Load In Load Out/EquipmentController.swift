@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class EquipmentController : CustomViewController, UITableViewDelegate, UITableViewDataSource, AVCaptureMetadataOutputObjectsDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class EquipmentController : CustomViewController, UITableViewDelegate, UITableViewDataSource, AVCaptureMetadataOutputObjectsDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     
     // Variables
     var video = AVCaptureVideoPreviewLayer()
@@ -296,8 +296,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         if tableView == crateTableView {
             let cell : CrateCell = crateTableView.dequeueReusableCell(withIdentifier: "crateCell", for: indexPath) as! CrateCell
             cell.crateTitleLabel.text = GlobalVariables.arrayOfCrates[indexPath.row].title
-            //cell.textLabel?.textAlignment = .center
-            cell.codeImage.image = GlobalVariables.arrayOfCrates[indexPath.row].code
+            cell.codeImage.image = GlobalVariables.arrayOfCrates[indexPath.row].typeIcon()
             return cell
         } else if tableView == itemTableView {
             let cell = itemTableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
@@ -320,14 +319,22 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == crateTableView {
-            return GlobalVariables.arrayOfCrates.count
-        } else if tableView == itemTableView {
-            return GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].items.count
+        if GlobalVariables.arrayOfCrates != [] {
+            if tableView == crateTableView {
+                return GlobalVariables.arrayOfCrates.count
+            } else if tableView == itemTableView {
+                return GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].items.count
+            } else {
+                return newItemArray.count
+            }
         } else {
-            return newItemArray.count
+            if tableView == newCrateContentsTable {
+                return newItemArray.count
+            } else {
+                return 0
+            }
         }
-    
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -431,7 +438,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     }
     
     func setupView() {
-        if GlobalVariables.arrayOfCrates.count != 0 {
+        if GlobalVariables.arrayOfCrates != [] {
             crateTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .none)
             titleLabel.text = GlobalVariables.arrayOfCrates[0].title
             typeLabel.text = GlobalVariables.arrayOfCrates[0].type
@@ -464,6 +471,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         // Item Field
         newCrateItemTitleField.frame = CGRect(x: newCrateTypeBar.frame.origin.x, y: newCrateTypeBar.frame.maxY + 15, width: newCrateTypeBar.frame.width / 2 - 60, height: 35)
         newCrateItemTitleField.layer.borderColor = GlobalVariables.yellowColor.cgColor
+        newCrateItemTitleField.delegate = self
         newCrateView.addSubview(newCrateItemTitleField)
         
         // Time Picker View
@@ -542,6 +550,9 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     }
     
     @objc func dismissCamera() {
+        
+        video.session?.stopRunning()
+
         UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseOut, animations: {
             
             self.cameraView.frame.origin.y = self.view.frame.height
@@ -550,6 +561,7 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
             
             self.dismissButton.removeFromSuperview()
             self.cameraView.removeFromSuperview()
+            
             
         })
     }
@@ -692,12 +704,11 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
             let newItem : Item = Item(title: newCrateItemTitleField.text!, setupLength: newItemTimePicker.selectedRow(inComponent: 0), setupInstructions: newItemSetupDescription.text!)
             
             newItemArray.append(newItem)
-            
+            newCrateContentsTable.reloadData()
+
             newCrateItemTitleField.text = ""
             newItemTimePicker.selectRow(0, inComponent: 0, animated: true)
             newItemSetupDescription.text = "(No setup instructions.)"
-            
-            newCrateContentsTable.reloadData()
             
         } else {
             
@@ -740,8 +751,9 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
     
     @objc func editCrate() {
         
-        newCrate(crateTitle: GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].title, newCrate: false)
-        
+        if crateTableView.indexPathForSelectedRow?.row != nil {
+            newCrate(crateTitle: GlobalVariables.arrayOfCrates[(crateTableView.indexPathForSelectedRow?.row)!].title, newCrate: false)
+        }
     }
     
     func crateColor(crate : Crate) -> UIColor {
@@ -749,16 +761,20 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         var color : UIColor = UIColor.red
         
         switch crate.type {
-        case GlobalVariables.arrayOfTypes[0]: // Lighting
-            color = UIColor.yellow
-        case GlobalVariables.arrayOfTypes[1]: // Band
-            color = UIColor.green
-        case GlobalVariables.arrayOfTypes[2]: // Stage
-            color = UIColor.purple
-        case GlobalVariables.arrayOfTypes[3]: // Audio
-            color = UIColor.blue
-        case GlobalVariables.arrayOfTypes[4]: // Visual
+        case GlobalVariables.arrayOfTypes[0]: // Visuals
             color = UIColor.orange
+        case GlobalVariables.arrayOfTypes[1]: // Lighting
+            color = UIColor.yellow
+        case GlobalVariables.arrayOfTypes[2]: // Audio
+            color = UIColor.blue
+        case GlobalVariables.arrayOfTypes[3]: // Stage
+            color = UIColor.purple
+        case GlobalVariables.arrayOfTypes[4]: // TV
+            color = UIColor.green
+        case GlobalVariables.arrayOfTypes[5]: // Band
+            color = UIColor.red
+        case GlobalVariables.arrayOfTypes[6]: // Misc
+            color = UIColor.gray
         default:
             color = UIColor.clear // ERROR
         }
@@ -766,6 +782,13 @@ class EquipmentController : CustomViewController, UITableViewDelegate, UITableVi
         return color
         
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+    
+    
     
 }
 
